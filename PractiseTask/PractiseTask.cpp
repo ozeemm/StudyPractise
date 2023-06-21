@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <Windows.h>
@@ -17,6 +18,8 @@ struct Student {
     bool isAllowedToExam = true; // Допущен ли к экзамену
 };
 
+const char fileName[] = "students.txt";
+
 int labsNum; // Количество лаб.работ
 vector<int> labsWeight; // Веса лаб.работ
 
@@ -32,22 +35,6 @@ int menuChoosement; // Выбор в меню
 void ClearConsole()
 {
     system("cls");
-}
-
-// Вывод меню в консоль
-void PrintMenu()
-{
-    ClearConsole();
-    cout << "---------- Меню ----------" << endl;
-    cout << "0 - Закрыть программу" << endl;
-    cout << "1 - Добавить данные о студенте" << endl;
-    cout << "2 - Считать данные о студентах из файла" << endl;
-    cout << "3 - Вывести таблицу" << endl;
-    do {
-        cout << "Ввод: "; cin >> menuChoosement;
-        if (menuChoosement < 0 || menuChoosement > 3)
-            cout << "Ошибка: введено некорректное значение" << endl;
-    } while (menuChoosement < 0 || menuChoosement > 3);
 }
 
 // Добавление данных о студенте из консоли
@@ -93,9 +80,30 @@ void AddUser()
 
     studentsNum++;
     students.push_back(student);
+}
 
-    cout << "Данные о студенте успешно добавлены" << endl;
-    system("pause");
+// Считывание данных из файла
+void ReadFromFile()
+{
+    ifstream inputFile;
+    inputFile.open(fileName);
+    if (!inputFile.is_open()) {
+        cout << "Ошибка при чтении файла" << endl;
+        return;
+    }
+
+    string inputText;
+    inputFile >> inputText;
+    labsNum = stoi(inputText); // Преобразование в int
+    labsWeight.resize(labsNum);
+    for (int i = 0; i < studentsNum; i++) {
+        inputFile >> inputText;
+        labsWeight[i] = stoi(inputText);
+    }
+
+
+    
+    inputFile.close();
 }
 
 // Вывод таблицы в консоль
@@ -135,7 +143,6 @@ void PrintTable()
     cout << "Макс. возм. сумма баллов: " << maxScore << endl;
     cout << "Самая высокая успеваемость: " << maxStudentPercent << endl;
     cout << endl;
-    system("pause");
 }
 
 // Сброс данных таблицы
@@ -153,47 +160,60 @@ int main()
     setlocale(LC_ALL, "Russian");
     SetConsoleCP(1251);
 
-    // Ввод данных о лаб.работах
-    do {
-        cout << "Количество лабораторных работ: "; cin >> labsNum;
+    bool isFromConsole;
+    cout << "Выберите способ ввода данных (0 - из файла, 1 - ручной ввод): "; cin >> isFromConsole;
+    ClearConsole();
 
-        if (labsNum <= 0)
-            cout << "Ошибка: количество лабораторных работ должно быть положительным числом" << endl;
-    } while (labsNum <= 0);
-    labsWeight.resize(labsNum);
-    
-    cout << "Веса лабораторных работ: ";
-    for (int i = 0; i < labsNum; i++) {
+    if (isFromConsole) {
+        // Ввод данных о лаб.работах
         do {
-            cin >> labsWeight[i];
-            if(labsWeight[i] <= 0)
-                cout << "Ошибка: вес лабораторной работы должнен быть положительным числом" << endl;
-        } while (labsWeight[i] <= 0);
-        maxScore += 5 * labsWeight[i];
-    }
-    
-    do {
-        PrintMenu();
+            cout << "Количество лабораторных работ: "; cin >> labsNum;
 
-        switch(menuChoosement)
-        {
-            case 1:
-                AddUser();
-                break;
+            if (labsNum <= 0)
+                cout << "Ошибка: количество лабораторных работ должно быть положительным числом" << endl;
+        } while (labsNum <= 0);
+        labsWeight.resize(labsNum);
 
-            case 2:
-                
-                break;
-
-            case 3:
-                if (studentsNum == 0)
-                    cout << "Данные о студентах отсутствуют" << endl;
-                else
-                    PrintTable();
-                break;
+        cout << "Веса лабораторных работ: ";
+        for (int i = 0; i < labsNum; i++) {
+            do {
+                cin >> labsWeight[i];
+                if (labsWeight[i] <= 0)
+                    cout << "Ошибка: вес лабораторной работы должнен быть положительным числом" << endl;
+            } while (labsWeight[i] <= 0);
+            maxScore += 5 * labsWeight[i];
         }
 
-    } while (menuChoosement != 0);
+        // Основной цикл
+        do {
+            ClearConsole();
+            if (studentsNum > 0)
+                PrintTable();
 
-    PrintTable();
+            cout << "---------- Меню ----------" << endl;
+            cout << "0 - Закрыть программу" << endl;
+            cout << "1 - Добавить данные о студенте" << endl;
+            cout << "2 - Сброс таблицы" << endl;
+            do {
+                cout << "Ввод: "; cin >> menuChoosement;
+                if (menuChoosement < 0 || menuChoosement > 2)
+                    cout << "Ошибка: введено некорректное значение" << endl;
+            } while (menuChoosement < 0 || menuChoosement > 2);
+
+            switch (menuChoosement)
+            {
+                case 1:
+                    AddUser();
+                    break;
+
+                case 2:
+                    ResetTable();
+                    break;
+            }
+
+        } while (menuChoosement != 0);
+    }
+    else {
+        ReadFromFile();
+    }
 }

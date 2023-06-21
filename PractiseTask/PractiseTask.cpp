@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <string>
+#include <Windows.h>
 
 using namespace std;
 
@@ -19,7 +20,9 @@ struct Student {
 
 int main()
 {
+    // Для русских символов
     setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251);
 
     int labsNum; // Количество лаб.работ
     vector<int> labsWeight; // Веса лаб.работ

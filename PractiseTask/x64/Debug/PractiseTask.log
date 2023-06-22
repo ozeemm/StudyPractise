@@ -1,3 +1,2 @@
 ﻿  PractiseTask.cpp
-C:\Users\stud\source\repos\PractiseTask\PractiseTask\PractiseTask.cpp(97,33): error C2440: приведение типов: невозможно преобразовать "std::string" в "int"
-C:\Users\stud\source\repos\PractiseTask\PractiseTask\PractiseTask.cpp(97,19): message : Для выполнения данного преобразования нет доступного оператора преобразования, определенного пользователем, или вызов оператора невозможен
+  PractiseTask.vcxproj -> C:\Users\stud\source\repos\PractiseTask\x64\Debug\PractiseTask.exe

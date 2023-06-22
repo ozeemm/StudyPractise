@@ -37,8 +37,32 @@ void ClearConsole()
     system("cls");
 }
 
+void CountStudent(Student& student)
+{
+    for(int i = 0; i < labsNum; i++)
+        student.totalResult += student.labResults[i] * labsWeight[i];
+    student.percentResult = student.totalResult * 100 / maxScore;
+
+    if (student.percentResult > maxStudentPercent)
+        maxStudentPercent = student.percentResult;
+
+    student.isAutoExam = (student.percentResult > 80);
+
+    bool isBadMark = false;
+    for (int mark : student.labResults) {
+        if (mark <= 2) {
+            isBadMark = true;
+            break;
+        }
+    }
+    if (isBadMark) {
+        student.isAllowedToExam = false;
+        student.isAutoExam = false;
+    }
+}
+
 // Добавление данных о студенте из консоли
-void AddUser()
+void AddStudent()
 {
     ClearConsole();
 
@@ -56,27 +80,9 @@ void AddUser()
                 cout << "Ошибка: оценка лабораторной работы может быть от 0 до 5" << endl;
 
         } while (student.labResults[i] < 0 || student.labResults[i] > 5);
-
-        student.totalResult += student.labResults[i] * labsWeight[i];
     }
-    student.percentResult = student.totalResult * 100 / maxScore;
 
-    if (student.percentResult > maxStudentPercent)
-        maxStudentPercent = student.percentResult;
-
-    student.isAutoExam = (student.percentResult > 80);
-
-    bool isBadMark = false;
-    for (int mark : student.labResults) {
-        if (mark < 2) {
-            isBadMark = true;
-            break;
-        }
-    }
-    if (isBadMark) {
-        student.isAllowedToExam = false;
-        student.isAutoExam = false;
-    }
+    CountStudent(student);
 
     studentsNum++;
     students.push_back(student);
@@ -93,16 +99,33 @@ void ReadFromFile()
     }
 
     string inputText;
+
     inputFile >> inputText;
     labsNum = stoi(inputText); // Преобразование в int
     labsWeight.resize(labsNum);
-    for (int i = 0; i < studentsNum; i++) {
+
+    for (int i = 0; i < labsNum; i++) {
         inputFile >> inputText;
         labsWeight[i] = stoi(inputText);
+        maxScore += 5 * labsWeight[i];
     }
 
+    while (!inputFile.eof()) {
+        Student student;
+        inputFile.seekg(inputFile.tellg() + (std::streampos)2); // Сдвиг курсора в текстовом файле (переход на след.строку, конец строки)
+        getline(inputFile, inputText);
+        student.name = inputText;
+        student.labResults.resize(labsNum);
+        for (int i = 0; i < labsNum; i++) {
+            inputFile >> inputText;
+            student.labResults[i] = stoi(inputText);
+        }
 
-    
+        CountStudent(student);
+        studentsNum++;
+        students.push_back(student);
+    }
+  
     inputFile.close();
 }
 
@@ -203,7 +226,7 @@ int main()
             switch (menuChoosement)
             {
                 case 1:
-                    AddUser();
+                    AddStudent();
                     break;
 
                 case 2:
@@ -215,5 +238,6 @@ int main()
     }
     else {
         ReadFromFile();
+        PrintTable();
     }
 }

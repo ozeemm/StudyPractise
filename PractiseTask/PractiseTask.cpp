@@ -112,7 +112,7 @@ void ReadFromFile()
 
     while (!inputFile.eof()) {
         Student student;
-        inputFile.seekg(inputFile.tellg() + (std::streampos)2); // Сдвиг курсора в текстовом файле (переход на след.строку, конец строки)
+        inputFile.seekg(inputFile.tellg() + (std::streampos)2); // Сдвиг курсора в текстовом файле на след. строку (пропускаются символы: переход на след.строку, конец строки)
         getline(inputFile, inputText);
         student.name = inputText;
         student.labResults.resize(labsNum);
@@ -156,16 +156,18 @@ void PrintTable()
     }
 
     // Вывод
+    cout << endl;
     cout.width(20); cout << "Вес лабы";
     for (int i = 0; i < labsNum; i++) {
         cout << setw(8) << labsWeight[i];
     }
     cout << endl;
 
-    cout << endl;
-    cout << "Макс. возм. сумма баллов: " << maxScore << endl;
-    cout << "Самая высокая успеваемость: " << maxStudentPercent << endl;
-    cout << endl;
+    cout << setw(20) << "Макс. возможная" << setw(8 * labsNum + 8) << maxScore << endl;
+    cout << setw(20) << "сумма баллов" << endl;
+
+    cout << setw(20) << "Самая высокая" << setw(8 * labsNum + 8 + 22) << maxStudentPercent << endl;
+    cout << setw(20) << "успеваемость" << endl;
 }
 
 // Сброс данных таблицы

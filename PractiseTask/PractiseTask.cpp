@@ -37,6 +37,7 @@ void ClearConsole()
     system("cls");
 }
 
+// Основной расчёт 
 void CountStudent(Student& student)
 {
     for(int i = 0; i < labsNum; i++)
@@ -174,10 +175,8 @@ void PrintTable()
 void ResetTable() {
     studentsNum = 0;
     students.clear();
-    maxScore = 0;
     maxStudentPercent = 0;
 }
-
 
 int main()
 {

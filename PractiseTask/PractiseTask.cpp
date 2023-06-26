@@ -18,8 +18,6 @@ struct Student {
     bool isAllowedToExam = true; // Допущен ли к экзамену
 };
 
-const char fileName[] = "students.txt";
-
 int labsNum; // Количество лаб.работ
 vector<int> labsWeight; // Веса лаб.работ
 
@@ -28,8 +26,6 @@ vector<Student> students; // Массив студентов
 
 int maxScore = 0; // Максимальное количество баллов
 int maxStudentPercent = 0; // Максимальный процент успеваемости среди студентов 
-
-int menuChoosement; // Выбор в меню
 
 // Очистка консоли
 void ClearConsole()
@@ -93,7 +89,7 @@ void AddStudent()
 void ReadFromFile()
 {
     ifstream inputFile;
-    inputFile.open(fileName);
+    inputFile.open("students.txt");
     if (!inputFile.is_open()) {
         cout << "Ошибка при чтении файла" << endl;
         return;
@@ -207,6 +203,8 @@ int main()
             } while (labsWeight[i] <= 0);
             maxScore += 5 * labsWeight[i];
         }
+
+        int menuChoosement; // Выбор в меню
 
         // Основной цикл
         do {

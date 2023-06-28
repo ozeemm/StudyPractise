@@ -180,8 +180,12 @@ int main()
     setlocale(LC_ALL, "Russian");
     SetConsoleCP(1251);
 
-    bool isFromConsole;
-    cout << "Выберите способ ввода данных (0 - из файла, 1 - ручной ввод): "; cin >> isFromConsole;
+    int isFromConsole;
+    do {
+        cout << "Выберите способ ввода данных (0 - из файла, 1 - ручной ввод): "; cin >> isFromConsole;
+        
+    } while (isFromConsole < 0 || isFromConsole > 1);
+
     ClearConsole();
 
     if (isFromConsole) {

@@ -182,8 +182,8 @@ int main()
 
     int isFromConsole;
     do {
-        cout << "Выберите способ ввода данных (0 - из файла, 1 - ручной ввод): "; cin >> isFromConsole;
-        
+        cout << "Выберите способ ввода данных (0 - из файла, 1 - ручной ввод): "; cin >> isFromConsole;  
+
     } while (isFromConsole < 0 || isFromConsole > 1);
 
     ClearConsole();
